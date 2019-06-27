@@ -5,9 +5,13 @@ namespace App\Http\Controllers\v1;
 use Illuminate\Http\Request;
 use App\Services\FlightService;
 use App\Http\Controllers\Controller;
+use App\Services\FileService;
+use App\Traits\ApiResponse;
 
 class FlightController extends Controller
 {
+    use ApiResponse;
+
     private $flightService;
 
     public function __construct(FlightService $flightService)
@@ -91,5 +95,14 @@ class FlightController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getFileLang(FileService $fileService)
+    {
+        $contentLang = $fileService->getFileLang();
+        if ($contentLang === null) {
+            return $this->responseError('Could not get the file or not found.', 404);
+        }
+        return $this->responseSuccess($contentLang);
     }
 }

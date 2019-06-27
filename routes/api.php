@@ -18,3 +18,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::resource('/v1/flights', v1\FlightController::class);
+
+Route::get('/v1/locale', 'v1\FlightController@getFileLang');
