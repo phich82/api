@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Helpers\Constant;
 
 class AuthToken
 {
@@ -15,11 +16,25 @@ class AuthToken
      */
     public function handle($request, Closure $next)
     {
-        $token = $request->header('X-API-TOKEN');
-        $tokensAccepted = ['test-value'];
-        if (!in_array($token, $tokensAccepted)) {
-            abort(401, 'Auth Token Not Found.');
+        if (!$this->verifyAuthToken($request->header(Constant::X_API_TOKEN))) {
+            abort(401, lang('auth.x_api_token'));
         }
         return $next($request);
+    }
+
+    /**
+     * Verify the auth token
+     *
+     * @param  string $token
+     *
+     * @return bool
+     */
+    private function verifyAuthToken($token)
+    {
+        $tokensAccepted = config('tokens.x-api-tokens-accepted');
+        $tokensAccepted = is_string($tokensAccepted)
+                            ? explode(',', $tokensAccepted)
+                            : $tokensAccepted;
+        return in_array($token, $tokensAccepted);
     }
 }

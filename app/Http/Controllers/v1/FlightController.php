@@ -7,6 +7,7 @@ use App\Services\FlightService;
 use App\Http\Controllers\Controller;
 use App\Services\FileService;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Crypt;
 
 class FlightController extends Controller
 {
@@ -26,7 +27,9 @@ class FlightController extends Controller
      */
     public function index(Request $request)
     {
-        return response()->json($this->flightService->getFlights($request->input()));
+        return $this->responseSuccess(
+            $this->flightService->getFlights($request->input())
+        );
     }
 
     /**
@@ -60,7 +63,9 @@ class FlightController extends Controller
     {
         $params = request()->input();
         $params['flight_number'] = $id;
-        return response()->json($this->flightService->getFlights($params));
+        return $this->responseSuccess(
+            $this->flightService->getFlights($params)
+        );
     }
 
     /**
@@ -101,7 +106,7 @@ class FlightController extends Controller
     {
         $contentLang = $fileService->getFileLang();
         if ($contentLang === null) {
-            return $this->responseError('Could not get the file or not found.', 404);
+            return $this->responseError(lang('file.not_found'), 404);
         }
         return $this->responseSuccess($contentLang);
     }
