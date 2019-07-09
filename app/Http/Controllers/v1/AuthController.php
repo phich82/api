@@ -23,7 +23,13 @@ class AuthController extends Controller
      */
     public function __construct(MstCustomerService $mstCustomerService)
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        /**
+         * Note: when use guard from defined user, we should run commands:
+         *       php artisan cache:clear
+         *       php artisan config:cache
+         */
+        // $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('jwt', ['except' => ['login', 'register']]);
         $this->mstCustomerService = $mstCustomerService;
     }
 
@@ -90,5 +96,10 @@ class AuthController extends Controller
     public function refresh()
     {
         return $this->responseSuccess(access_token_api_data(refresh_token_api()));
+    }
+
+    public function payload()
+    {
+        return $this->responseSuccess(auth_api()->payload());
     }
 }

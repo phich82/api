@@ -30,6 +30,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('logout', 'v1\AuthController@logout');
         Route::post('refresh', 'v1\AuthController@refresh');
         Route::post('profile', 'v1\AuthController@profile');
+        Route::post('payload', 'v1\AuthController@payload');
     });
 });
 

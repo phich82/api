@@ -6,6 +6,10 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Traits\ApiResponse;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Illuminate\Http\Response;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class Handler extends ExceptionHandler
 {
@@ -52,6 +56,18 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof HttpException) {
             return $this->responseError($exception->getMessage(), $exception->getStatusCode());
+        }
+
+        if ($exception instanceof TokenInvalidException) {
+            return $this->responseError('Token is invalid.', Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($exception instanceof TokenExpiredException) {
+            return $this->responseError('Token is expired.', Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($exception instanceof JWTException) {
+            return $this->responseError('Token not found.', Response::HTTP_BAD_REQUEST);
         }
         return parent::render($request, $exception);
     }
