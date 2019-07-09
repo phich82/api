@@ -7,8 +7,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements JWTSubject
+class MstCustomer extends Authenticatable implements JWTSubject
 {
+    protected $table = 'mst_customer';
+    protected $primaryKey = 'customer_id';
+
     use Notifiable;
 
     /**
@@ -17,7 +20,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'customer_id', 'customer_name', 'email', 'password',
     ];
 
     /**
@@ -30,19 +33,24 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * @override JWTSubject
      *
-     * @var array
+     * Get value of model primary key
+     *
+     * @return mixed
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
     public function getJWTIdentifier()
     {
         return $this->getKey();
     }
 
+    /**
+     * @override JWTSubject
+     *
+     * Customize claims of JWT
+     *
+     * @return array
+     */
     public function getJWTCustomClaims()
     {
         return [];

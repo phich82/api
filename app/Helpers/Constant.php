@@ -10,4 +10,6 @@ class Constant
     const ERROR_MESSAGE_KEY_API = 'error_message';
     const X_API_TOKEN = 'X-API-TOKEN';
     const X_API_ACCESS_TOKEN = 'X-API-ACCESS-TOKEN';
+
+    const API_GUARD_KEY = 'api';
 }
